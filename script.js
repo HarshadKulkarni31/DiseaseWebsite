@@ -94,8 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ✅ Share button placeholder
     shareButton.addEventListener('click', () => {
-        alert("This is an interactive preview of your website.\n\nTo share it, you'll need to deploy your project online (e.g., GitHub Pages, Netlify).");
-    });
+    if (navigator.share) {
+        navigator.share({
+            title: 'MedInfo Hub',
+            text: 'Check out this interactive disease database at MedInfo Hub!',
+            url: window.location.href,
+        }).then(() => {
+            console.log('Thanks for sharing!');
+        }).catch((error) => {
+            console.error('Error sharing:', error);
+        });
+    } else {
+        // Fallback for browsers that don't support the Web Share API
+        prompt('Copy this URL to share:', window.location.href);
+    }
+});
+
 
     // ✅ Initial fetch
     fetchDiseases();
